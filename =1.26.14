@@ -1,0 +1,6 @@
+Collecting urllib3
+  Downloading urllib3-2.0.7-py3-none-any.whl.metadata (6.6 kB)
+Downloading urllib3-2.0.7-py3-none-any.whl (124 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 124.2/124.2 kB 1.5 MB/s eta 0:00:00
+Installing collected packages: urllib3
+Successfully installed urllib3-2.0.7
