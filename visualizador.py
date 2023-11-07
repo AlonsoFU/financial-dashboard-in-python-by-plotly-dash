@@ -41,22 +41,25 @@ class DashBarChart:
         df_tarjeta_credito['Fecha'] = pd.to_datetime(df_tarjeta_credito['Fecha'], format='%d/%m/%y')
 
         # Get value group by month and year from column Fecha an column Ingreso/Pago in df_cuenta_corriente over column Monto
-        df_cuenta_corriente = df_cuenta_corriente.groupby([df_cuenta_corriente['Fecha'].dt.year.rename('year'), df_cuenta_corriente['Fecha'].dt.month.rename('month'), df_cuenta_corriente['Ingreso/Pago']]).agg({'Monto': 'sum'}).reset_index()
+        df_cuenta_corriente = df_cuenta_corriente.groupby([df_cuenta_corriente['Fecha'].dt.year.rename('Año'), df_cuenta_corriente['Fecha'].dt.month.rename('mes'), df_cuenta_corriente['Ingreso/Pago']]).agg({'Monto': 'sum'}).reset_index()
+
+        # Obtain Cuenta_corriente Monto total value by all different values from Ingreso/Pago column
+        df_cuenta_corriente_pago = df_cuenta_corriente[df_cuenta_corriente['Ingreso/Pago'] == 'Pago']
+        df_cuenta_corriente_ingreso = df_cuenta_corriente[df_cuenta_corriente['Ingreso/Pago'] == 'Ingreso']
+        df_cuenta_corriente_cargo_inv = df_cuenta_corriente[df_cuenta_corriente['Ingreso/Pago'] == 'Cargo Inv']
 
 
-        
         self.app.layout = html.Div([ html.Div([
-        html.Div([
-            html.Img(src = self.app.get_asset_url('statistics.png'),
-                     style = {'height': '30px'},
-                     className = 'title_image'
-                     ),
-            html.H6('Financial Dashboard',
-                    style = {'color': '#D35940'},
-                    className = 'title'
-                    ),
-        ], className = 'logo_title'),
-
+            html.Div([
+                html.Img(src = self.app.get_asset_url('statistics.png'),
+                        style = {'height': '30px'},
+                        className = 'title_image'
+                        ),
+                html.H6('Financial Dashboard',
+                        style = {'color': '#D35940'},
+                        className = 'title'
+                        ),
+            ], className = 'logo_title'),
         html.Div([
             html.P('Select Month',
                    style = {'color': '#D35940'},
@@ -70,7 +73,7 @@ class DashBarChart:
                          value = 'Mar',
                          placeholder = 'Select Month',
                          options = [{'label': c, 'value': c}
-                                    for c in df_cuenta_corriente['month'].unique()],
+                                    for c in df_cuenta_corriente['mes'].unique()],
                          className = 'drop_down_list'),
         ], className = 'title_drop_down_list'),
     ], className = 'title_and_drop_down_list'),
@@ -151,171 +154,12 @@ class DashBarChart:
             dcc.Graph(id = 'chart2',
                       config = {'displayModeBar': False},
                       className = 'donut_chart_size'),
-
-            html.Div([
-                html.Div([
-                    html.Div([
-                        html.P('Income Statement',
-                               className = 'format_text')
-                    ], className = 'income_statement'),
-
-                    html.Div([
-                        html.Div([
-                            html.Div([
-                                html.P('Income',
-                                       className = 'income_statement_title'
-                                       ),
-                                html.Div(id = 'income_statement1',
-                                         className = 'income_statement1'),
-                            ], className = 'income_statement_indicator_row1'),
-                            html.Div([
-                                html.P('Cost of Goods Sold',
-                                       className = 'income_statement_title'
-                                       ),
-                                html.Div(id = 'income_statement2',
-                                         className = 'income_statement1')
-                            ], className = 'income_statement_indicator_row2'),
-                            html.Hr(className = 'bottom_border'),
-                            html.Div([
-                                html.P('Gross Profit',
-                                       className = 'income_statement_title'
-                                       ),
-                                html.Div(id = 'income_statement3',
-                                         className = 'income_statement1'),
-                            ], className = 'income_statement_indicator_row3'),
-                            html.Div([
-                                html.P('Total Operating Expenses',
-                                       className = 'income_statement_title'
-                                       ),
-                                html.Div(id = 'income_statement4',
-                                         className = 'income_statement1')
-                            ], className = 'income_statement_indicator_row4'),
-                            html.Hr(className = 'bottom_border'),
-                            html.Div([
-                                html.P('Operating Profit (EBIT)',
-                                       className = 'income_statement_title'
-                                       ),
-                                html.Div(id = 'income_statement5',
-                                         className = 'income_statement1'),
-                            ], className = 'income_statement_indicator_row5'),
-                            html.Div([
-                                html.P('Taxes',
-                                       className = 'income_statement_title'
-                                       ),
-                                html.Div(id = 'income_statement6',
-                                         className = 'income_statement1')
-                            ], className = 'income_statement_indicator_row6'),
-                        ], className = 'in_state_column')
-                    ], className = 'income_statement_multiple_values'),
-                ], className = 'income_statement_column1'),
-                html.Div([
-                    html.Div([
-                        html.Div([
-                            html.P('Net Profit',
-                                   className = 'income_statement_title'
-                                   ),
-                            html.Div(id = 'income_statement7',
-                                     className = 'income_statement1')
-                        ], className = 'income_statement_indicator_row7'),
-                    ], className = 'net_profit_column')
-                ], className = 'net_profit'),
-            ], className = 'net_profit1'),
         ], className = 'income_statement_row')
     ], className = 'f_row'),
 
-    html.Div([
-        html.Div([
-            html.Div([
-                html.Div([
-                    html.Div([
-                        html.P('Quick Ratio',
-                               className = 'format_text')
-                    ], className = 'accounts_receivable1'),
-                    html.Div([
-                        html.Div(id = 'quick_ratio_value',
-                                 className = 'numeric_value')
-                    ], className = 'accounts_receivable2')
-                ], className = 'accounts_receivable_column'),
-                html.Div([
-                    html.Div([
-                        html.P('Current Ratio',
-                               className = 'format_text')
-                    ], className = 'accounts_payable1'),
-                    html.Div([
-                        html.Div(id = 'current_ratio_value',
-                                 className = 'numeric_value')
-                    ], className = 'accounts_payable2')
-                ], className = 'accounts_payable_column'),
-            ], className = 'receivable_payable_column'),
 
-            html.Div([
-                html.Div([
-                    html.Div([
-                        html.P('Net Profit',
-                               className = 'format_text')
-                    ], className = 'income1'),
-                    html.Div([
-                        html.Div(id = 'net_profit_value',
-                                 className = 'numeric_value')
-                    ], className = 'income2')
-                ], className = 'income_column'),
-                html.Div([
-                    html.Div([
-                        html.P('Cash at EOM',
-                               className = 'format_text')
-                    ], className = 'expenses1'),
-                    html.Div([
-                        html.Div(id = 'cash_at_eom_value',
-                                 className = 'numeric_value')
-                    ], className = 'expenses2')
-                ], className = 'expenses_column'),
-            ], className = 'income_expenses_column'),
-        ], className = 'first_row'),
-        html.Div([
-            html.Div([
-                html.Div([
-                    html.Div([
-                    ], className = 'first_left_circle'),
-                    html.Div([
-                        html.Div(id = 'third_left_circle'),
-                    ], className = 'second_left_circle'),
-                ], className = 'first_second_left_column'),
-            ], className = 'left_circle_row'),
-            dcc.Graph(id = 'chart3',
-                      config = {'displayModeBar': False},
-                      className = 'donut_chart_size'),
-        ], className = 'text_and_chart'),
 
-        html.Div([
-            html.Div([
-                html.Div([
-                    html.Div([
-                    ], className = 'first_right_circle'),
-                    html.Div([
-                        html.Div(id = 'fourth_right_circle'),
-                    ], className = 'second_right_circle'),
-                ], className = 'first_second_right_column'),
-            ], className = 'right_circle_row'),
-            dcc.Graph(id = 'chart4',
-                      config = {'displayModeBar': False},
-                      className = 'donut_chart_size'),
 
-            html.Div([
-                dcc.Graph(id = 'bar_chart',
-                          config = {'displayModeBar': False},
-                          className = 'bar_chart_size'),
-            ], className = 'net_profit2'),
-        ], className = 'income_statement_row')
-    ], className = 'f_row'),
-
-    html.Div([
-        dcc.Graph(id = 'line_chart',
-                  config = {'displayModeBar': False},
-                  className = 'line_chart_size'),
-        dcc.Graph(id = 'combination_chart',
-                  config = {'displayModeBar': False},
-                  className = 'combination_chart_size'),
-    ], className = 'last_row')
 ])
 
 
@@ -325,7 +169,7 @@ class DashBarChart:
             if select_month is None:
                 raise PreventUpdate
             else:
-                filter_month = df_cuenta_corriente[df_cuenta_corriente['months'] == select_month]
+                filter_month = data[data['months'] == select_month]
                 accounts_receivable = filter_month['accounts receivable'].iloc[0]
                 pct_accounts_receivable = filter_month['pct_accounts_receivable'].iloc[0]
 
@@ -386,7 +230,7 @@ class DashBarChart:
                             ], className = 'vs_p_m_column')
                         ], className = 'indicator_column'),
                     ]
-
+            
     def open_browser(self):
             # Abre el navegador web para visualizar la aplicación
             debug_mode = self.app.server.debug
