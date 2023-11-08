@@ -102,64 +102,9 @@ class DashBarChart:
                     ], className = 'accounts_payable2')
                 ], className = 'accounts_payable_column'),
             ], className = 'receivable_payable_column'),
-
-            html.Div([
-                html.Div([
-                    html.Div([
-                        html.P('Income',
-                               className = 'format_text')
-                    ], className = 'income1'),
-                    html.Div([
-                        html.Div(id = 'income_value',
-                                 className = 'numeric_value')
-                    ], className = 'income2')
-                ], className = 'income_column'),
-                html.Div([
-                    html.Div([
-                        html.P('Expenses',
-                               className = 'format_text')
-                    ], className = 'expenses1'),
-                    html.Div([
-                        html.Div(id = 'expenses_value',
-                                 className = 'numeric_value')
-                    ], className = 'expenses2')
-                ], className = 'expenses_column'),
-            ], className = 'income_expenses_column'),
         ], className = 'first_row'),
-        html.Div([
-            html.Div([
-                html.Div([
-                    html.Div([
-                    ], className = 'first_left_circle'),
-                    html.Div([
-                        html.Div(id = 'second_left_circle'),
-                    ], className = 'second_left_circle'),
-                ], className = 'first_second_left_column'),
-            ], className = 'left_circle_row'),
-            dcc.Graph(id = 'chart1',
-                      config = {'displayModeBar': False},
-                      className = 'donut_chart_size'),
-        ], className = 'text_and_chart'),
 
-        html.Div([
-            html.Div([
-                html.Div([
-                    html.Div([
-                    ], className = 'first_right_circle'),
-                    html.Div([
-                        html.Div(id = 'second_right_circle'),
-                    ], className = 'second_right_circle'),
-                ], className = 'first_second_right_column'),
-            ], className = 'right_circle_row'),
-            dcc.Graph(id = 'chart2',
-                      config = {'displayModeBar': False},
-                      className = 'donut_chart_size'),
-        ], className = 'income_statement_row')
     ], className = 'f_row'),
-
-
-
-
 ])
 
 
@@ -169,9 +114,9 @@ class DashBarChart:
             if select_month is None:
                 raise PreventUpdate
             else:
-                filter_month = data[data['months'] == select_month]
-                accounts_receivable = filter_month['accounts receivable'].iloc[0]
-                pct_accounts_receivable = filter_month['pct_accounts_receivable'].iloc[0]
+                filter_month = df_cuenta_corriente[df_cuenta_corriente['mes'] == select_month]
+                accounts_receivable = filter_month['Monto'].iloc[0]
+                pct_accounts_receivable = filter_month['Monto'].iloc[0]
 
                 if pct_accounts_receivable > 0:
                     return [
